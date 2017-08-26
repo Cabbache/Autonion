@@ -66,6 +66,7 @@ if os.getuid() != 0:
 print "Checking Internet connection."
 if is_connected() == False:
 	print("Error: Cannot reach the internet.")
+	exit()
 print "Internet OK"
 if len(sys.argv) > 1:
 	if sys.argv[1] == "renew":
