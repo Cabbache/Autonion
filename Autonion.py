@@ -3,6 +3,7 @@ import socket
 import os
 import time
 import sys
+
 def is_connected():
   try:
     host = socket.gethostbyname("www.google.com")
@@ -11,6 +12,7 @@ def is_connected():
   except:
      pass
   return False
+
 def checkTor():
 	if os.path.exists("/var/lib/tor") == True and os.path.exists("/etc/tor/torrc") == True:
 		print("Tor is installed")
@@ -18,6 +20,7 @@ def checkTor():
 	else:
 		print("Tor is not installed")
 		return False
+
 def checkApache():
 	if os.path.exists("/etc/apache2") == True:
 		print("Apache2 is installed")
@@ -25,10 +28,12 @@ def checkApache():
 	else:
 		print("Apache2 is not installed")
 		return False
+
 def ReadAddr():
 	with open("/var/lib/tor/hostname", "r") as file:
 		address = file.read()[:-1]
 	return address
+
 def GetTor():
 	if checkTor() == False:
 		print("Installing tor\n")
@@ -37,6 +42,7 @@ def GetTor():
 		if checkTor() == False:
 			print("Error: Tor doesn't seem to be installed after installation")
 		        exit()
+			
 def WaitForHost():
 	t = 0
 	while os.path.exists("/var/lib/tor/hostname") == False:
@@ -47,6 +53,7 @@ def WaitForHost():
 		if t > 60:
 			print("Error: The hostname does not seem to appear.")
 			exit()
+
 def ConfigApache(address):
 	with open("/etc/apache2/sites-enabled/" + address + ".conf", "w") as file:
 		file.write("<VirtualHost 127.0.0.1:80>\n")
@@ -55,11 +62,13 @@ def ConfigApache(address):
 		file.write("	ErrorLog ${APACHE_LOG_DIR}/error.log\n")
 		file.write("	CustomLog ${APACHE_LOG_DIR}/access.log combined\n")
 		file.write("</VirtualHost>")
+
 def Exist(address):
 	if os.path.exists("/var/lib/tor/private_key") and os.path.exists("/etc/apache2/sites-enabled/" + address + ".conf") and os.path.exists("/var/www/" + address):
 		return True
 	else:
 		return False
+
 if os.getuid() != 0:
 	print("Error: Script must be run as root with root privelages.")
 	exit()
